@@ -1,0 +1,10 @@
+#############################################################
+# All code in this repository - Copyright 2011 Sol Birnbaum
+# -----------------------------------------
+# All code in this repository is licensed under GNU-GPL
+#############################################################
+
+Dependencies: 
+
+cherrypy: http://www.cherrypy.org/wiki/CherryPyDownload
+webob: http://pypi.python.org/pypi/WebOb
