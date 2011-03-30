@@ -5,8 +5,8 @@ conn = sqlite3.connect('pfsdb')
 
 class db:   
     @staticmethod
-    def query_filekey(key):
-        cursor = conn.cursor()
+    def query_filekey(key, con=conn):
+        cursor = con.cursor()
         query = (key,)
         cursor.execute('select * from files where key=?', query)
         return cursor.fetchone()[1]
@@ -17,16 +17,16 @@ class db:
         cursor.execute('select * from files where user=?', query)
         return cursor.fetchall()
     @staticmethod
-    def insert_file(filepath, user):
+    def insert_file(filepath, user, con=conn):
         key=rand_alpha_numeric(14)
         date=time.asctime(time.gmtime())
-        try:
-            cursor = conn.cursor()
-            query = (key, filepath, user, date,)
-            cursor.execute('insert into files(key, path, user, time) values (?,?,?,?)', query)
-            conn.commit()
-        except:
-            return None
+        #try:
+        cursor = con.cursor()
+        query = (key, filepath, user, date,)
+        cursor.execute('insert into files(key, path, user, time) values (?,?,?,?)', query)
+        con.commit()
+        #except:
+        #    return None
         return key
     @staticmethod
     def query_user(user, passwd, conn):

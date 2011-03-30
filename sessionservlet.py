@@ -1,6 +1,7 @@
 from utilsservlet import rand_alpha_numeric
 import hashlib, time
 
+
 class RamDB(object):
     def __init__(self):
         self.by_key = {}

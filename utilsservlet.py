@@ -30,6 +30,13 @@ def create_db():
     """)   
     conn.commit()
 
+def get_upload_path():
+    import os
+    if os.name == 'nt':
+        return os.path.expandvars("%USERPROFILE%\\Downloads\\")
+    else:
+        return os.path.expandvars("$HOME/Downloads/")
+
 if __name__ == '__main__':
     import sys
     if len(sys) > 1:

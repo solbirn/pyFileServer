@@ -1,8 +1,9 @@
 from webob import Request, Response
+from dbservlet import db
 import mimetypes
-import os
+import os, sqlite3
 
-def FileApp(environ, start_response, struct='filesystem'):
+def FileApp(environ, start_response, struct='keysystem'):
     req = Request(environ)
     if struct == 'filesystem':
         filename = 'C:%s' % req.path.replace('/file','').replace('/',os.path.sep)
@@ -13,8 +14,9 @@ def FileApp(environ, start_response, struct='filesystem'):
             res = make_file_response(filename)
             return res(environ, start_response)
     else:
-        filekey = req.path.replace('/file','')
-        filename = db.query_filekey(filekey)
+        filekey = req.path.replace('/file/','').split('/')[0]
+        conn = sqlite3.connect('pfsdb')
+        filename = db.query_filekey(filekey, conn)
         res = make_file_response(filename)
         return res(environ, start_response)
     
@@ -30,6 +32,7 @@ def make_file_response(filename):
                    conditional_response=True)
     res.headers.add('Accept-Ranges','bytes')
     res.headers.add('Server', 'JCT File Server 0.01')
+    res.headers.add('Content-Disposition','attachment; filename=%s'%(filename.split(os.path.sep)[-1]))
     res.app_iter = FileIterable(filename)
     res.content_length = os.path.getsize(filename)
     res.last_modified = os.path.getmtime(filename)
