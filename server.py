@@ -1,9 +1,9 @@
-import sys
-import cherrypy
+import sys, cherrypy
 from cherrypy import wsgiserver
 from fileservlet import FileApp
 from loginservlet import LoginApp
 from templservlet import render
+
 
 class Main:
     def index(self):

@@ -1,20 +1,13 @@
 from utilsservlet import rand_alpha_numeric
 import hashlib, time
 
-#class Login:
-#    def index(self, user=None, passwd=None):
-#        if db.query_user(user, passwd):
-#            
-#        return __templ__ % ('Login Page','Logged in!')  
-#    index.exposed = True
-
 class RamDB(object):
     def __init__(self):
         self.by_key = {}
         self.by_hash = {}
     def add(self, session):
-        self.by_key.update({session.key,session})
-        self.by_hash.update({session.hash,session})
+        self.by_key.update({session.key:session})
+        self.by_hash.update({session.uphash:session})
 class Session:
     def __init__(self):
         self.db = RamDB()
@@ -44,7 +37,9 @@ class Session:
         elif uphash: self.db.by_hash[uphash].data = data
         else: return None
     def gen_session_key(self):
-        return hashlib.sha256().update(rand_alpha_numeric(20)).hexdigest()
+        key = hashlib.sha256()
+        key.update(rand_alpha_numeric(20))
+        return key.hexdigest()
 class UserSession(object):
     def __init__(self, key, uphash, ip, data={}, currtime=time.localtime()):
         self.creation_time = currtime
@@ -52,4 +47,3 @@ class UserSession(object):
         self.uphash = uphash
         self.ip = ip
         self.data = data
-        return self

@@ -1,6 +1,6 @@
 from webob import Request, Response
 import mimetypes
-import os, db
+import os
 
 def FileApp(environ, start_response, struct='filesystem'):
     req = Request(environ)
