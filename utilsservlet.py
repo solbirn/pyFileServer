@@ -1,3 +1,5 @@
+from templservlet import __settings__
+
 def rand_alpha_numeric(length):
     import random, time
     word = ""
@@ -6,36 +8,48 @@ def rand_alpha_numeric(length):
         word += random.choice('qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890')
     return word
 
-def create_db():
+def create_db(db_name='pfsdb'):
     import sqlite3
-    conn = sqlite3.connect('pfsdb')
+    conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    c.executescript("""
-    create table files(
-        key key,
-        path,
-        user,
-        time,
-        errcode
-    );
-    
-    create table users(
-        hash key,
-        name,
-        email,
-        datejoined,
-        verified bool,
-        premium
-    );
-    """)   
-    conn.commit()
+    if db_name == ":memory:" or db_name == "sess":
+        c.executescript("""
+        create table sessions(
+            key key,
+            hash,
+            ip,
+            crtime,
+            data
+            );
+        """)
+        conn.commit()
+    else:
+        c.executescript("""
+        create table files(
+            key key,
+            path,
+            user,
+            time,
+            errcode
+        );
+        
+        create table users(
+            hash key,
+            name,
+            email,
+            datejoined,
+            verified bool,
+            premium
+        );
+        """)   
+        conn.commit()
 
 def get_upload_path():
     import os
     if os.name == 'nt':
-        return os.path.expandvars("%USERPROFILE%\\Downloads\\")
+        return os.path.expandvars(__settings__['uploaddir']['windows'])
     else:
-        return os.path.expandvars("$HOME/Downloads/")
+        return os.path.expandvars(__settings__['uploaddir']['posix'])
 
 if __name__ == '__main__':
     import sys

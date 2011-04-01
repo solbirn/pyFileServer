@@ -1,11 +1,12 @@
+import os, sqlite3, mimetypes
 from webob import Request, Response
-from dbservlet import db
-import mimetypes
-import os, sqlite3
 
-def FileApp(environ, start_response, struct='keysystem'):
+from templservlet import render, __settings__
+from dbservlet import db
+
+def FileApp(environ, start_response, struct=__settings__['servedir']):
     req = Request(environ)
-    if struct == 'filesystem':
+    if struct:
         filename = 'C:%s' % req.path.replace('/file','').replace('/',os.path.sep)
         if os.path.isdir(filename):
             res = make_folder_response(filename, req)
@@ -19,28 +20,29 @@ def FileApp(environ, start_response, struct='keysystem'):
         filename = db.query_filekey(filekey, conn)
         res = make_file_response(filename)
         return res(environ, start_response)
-    
-#@staticmethod
+
 def get_mimetype(filename):
     type, encoding = mimetypes.guess_type(filename)
     # We'll ignore encoding, even though we shouldn't really
     return type or 'application/octet-stream'
-
-#@staticmethod
 def make_file_response(filename):
     res = Response(content_type=get_mimetype(filename),
                    conditional_response=True)
     res.headers.add('Accept-Ranges','bytes')
-    res.headers.add('Server', 'JCT File Server 0.01')
+    res.headers.add('Server', render('__server_info__'))
     res.headers.add('Content-Disposition','attachment; filename=%s'%(filename.split(os.path.sep)[-1]))
     res.app_iter = FileIterable(filename)
-    res.content_length = os.path.getsize(filename)
-    res.last_modified = os.path.getmtime(filename)
-    res.etag = '%s-%s-%s' % (os.path.getmtime(filename),
-                             os.path.getsize(filename), hash(filename))
+    try:
+        res.content_length = os.path.getsize(filename)
+        res.last_modified = os.path.getmtime(filename)
+        res.etag = '%s-%s-%s' % (os.path.getmtime(filename),
+                                 os.path.getsize(filename), hash(filename))
+    except WindowsError, e:
+        if e.errno == 2:
+            del res
+            res = Response(status='404')
+            res.headers.add('Server', render('__server_info__'))
     return res
-
-#@staticmethod
 def make_folder_response(foldername, req):
     if req.path_url.endswith('/'):
         fold_url = req.path_url[:-1]
@@ -53,7 +55,7 @@ def make_folder_response(foldername, req):
     res = Response(content_type="text/html",
                    conditional_response=True)
     res.body = folderlist[0]
-    res.headers.add('Server', 'pyFileServer 0.01')
+    res.headers.add('Server', render('__server_info__'))
     res.content_length = len(res.body)
     res.last_modified = os.path.getmtime(foldername)
     res.etag = '%s-%s-%s' % (os.path.getmtime(foldername),

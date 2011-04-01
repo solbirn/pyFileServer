@@ -1,10 +1,7 @@
-import os
-localDir = os.path.dirname(__file__)
-absDir = os.path.join(os.getcwd(), localDir)
+import os, cherrypy, sqlite3
 
 from utilsservlet import get_upload_path
 from dbservlet import db
-import cherrypy, sqlite3
 
 class UploadApp(object):
 
@@ -23,14 +20,6 @@ class UploadApp(object):
     index.exposed = True
 
     def do(self, myFile):
-        out = """<html>
-        <body>
-            myFile length: %s<br />
-            myFile filename: %s<br />
-            myFile mime-type: %s
-        </body>
-        </html>"""
-
         fpath = get_upload_path()+myFile.filename
         
         while os.path.exists(fpath):
@@ -40,7 +29,6 @@ class UploadApp(object):
             for part in pathparts:
                 fpath += part + '.'
             fpath = fpath[:-1]
-            print fpath
             
         f = open(fpath,'wb')
         size = 0
@@ -52,18 +40,18 @@ class UploadApp(object):
             size += len(data)
         f.close()
         conn = sqlite3.connect('pfsdb')
-        key = db.insert_file(fpath, 'shlomo', conn)   
+        key = db.insert_file(fpath, 'annonymous', conn)   
              
         hostaddr = cherrypy.request.local.ip
         hostport = cherrypy.request.local.port
 
         if hostaddr == '': 
             hostaddr = 'localhost'
-
+        print hostaddr 
         if hostport != 80:
             absfilepath = '%s://%s:%s/file/%s/%s' % (cherrypy.request.scheme, hostaddr, hostport, key, myFile.filename)
         else:
-            absfilepath = 'http://%s/file/%s/%s' % (host, keyaddr, myFile.filename)
+            absfilepath = 'http://%s/file/%s/%s' % (hostaddr, key, myFile.filename)
         
         return absfilepath
     do.exposed = True

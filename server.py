@@ -1,37 +1,43 @@
-import sys, cherrypy
-from cherrypy import wsgiserver
+import os, sys, cherrypy
+from cherrypy.wsgiserver import WSGIPathInfoDispatcher, CherryPyWSGIServer
+
 from fileservlet import FileApp
-from uploadservlet import *
-from loginservlet import LoginApp
+from uploadservlet import UploadApp
+from loginservlet import LoginApp, Register
+from utilsservlet import create_db
 from templservlet import render
 
-config = {'global':
+config = {'/favicon.ico':
     {
         'tools.staticfile.on': True,
-        'tools.staticfile.filename': "favico.ico",
+        'tools.staticfile.filename': "%s\\favicon.ico" % os.getcwd(),
     }
 }
 
 class Main:
+    register = Register()
+    upload = UploadApp()
     def index(self):
-        return render() % ('Home Page','Welcome!')
+        from templservlet import render
+        return render() % ('Home Page',"""<ul>
+                                            <li><a href="/login">Login</a></li>
+                                            <li><a href="/register">Register</a></li>
+                                            <li><a href="/upload">Upload a file</a></li>
+                                          </ul>""")
     index.exposed = True
 
-class Icon:
-    def index(self):
-        return serve_file("favicon.ico", "image/x-icon", "attachment")
-    index.exposed = True
-    
 def main():
-    AppDispatcher = wsgiserver.WSGIPathInfoDispatcher({'/file': FileApp, 
-                                                    '/login': LoginApp,
-                                                    '/upload': cherrypy.tree.mount(UploadApp(),'/upload',config=config),
-                                                    '/': cherrypy.tree.mount(Main(),'/',config=config),
-                                                    '/favicon.ico': (Icon(),'/')})
-    server = wsgiserver.CherryPyWSGIServer(
-           ('127.0.0.1', 8090), AppDispatcher,
-           server_name='JCT File Server 0.01', 
-           numthreads=100, request_queue_size=70)
+    AppDispatcher = WSGIPathInfoDispatcher({'/': cherrypy.tree.mount(Main(),'/',config=config),
+                                            '/login': LoginApp,
+                                            '/file': FileApp
+                                            })
+    server = CherryPyWSGIServer(
+                                ('127.0.0.1', 80), 
+                                AppDispatcher,
+                                server_name=render('__server_info__'), 
+                                numthreads=100, 
+                                request_queue_size=70
+                                )
     try: server.start()
     except KeyboardInterrupt: sys.exit()
 
