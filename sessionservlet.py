@@ -2,41 +2,6 @@ import hashlib, time, sqlite3
 
 from utilsservlet import rand_alpha_numeric, create_db
 
-#class RamDB(object):
-#    def __init__(self):
-#        self.by_key = {}
-#        self.by_hash = {}
-#    def add(self, session):
-#        self.by_key.update({session.key:session})
-#        self.by_hash.update({session.uphash:session})
-#class Session:
-#    def __init__(self):
-#        self.db = RamDB()
-#    def add_session(self, session):
-#        self.db.add(session)
-#        return session.key
-#    def del_session(self, key=None, uphash=None):
-#        if key:
-#            del self.db.by_hash[self.db.by_key[key].uphash]
-#            del self.db.by_key[key]
-#            return True
-#        elif uphash:
-#            del self.db.by_key[self.db.by_hash[hash].key]
-#            del self.db.by_hash[uphash]
-#            return True
-#        else: return False
-#    def check_session(self, key=None, uphash=None):
-#        if key: return self.db.by_key.has_key(key)
-#        elif uphash: return self.db.by_hash.has_key(uphash)
-#        else: return None
-#    def get_session_data(self, key=None, uphash=None):
-#        if key: return self.db.by_key[key].data
-#        elif uphash: return self.db.by_hash[uphash].data
-#        else: return None
-#    def set_session_data(self, data, key=None, uphash=None):
-#        if key: self.db.by_key[key].data = data
-#        elif uphash: self.db.by_hash[uphash].data = data
-#        else: return None
 try:
     create_db("sess")
 except:
@@ -53,14 +18,17 @@ class UserSession(object):
         return "%s\n%s\n%s\n%s\n%s" % (self.key, self.uphash, self.ip, self.data, self.creation_time)
 
 class SessionDB:
-    def add(self, session):
+    @staticmethod
+    def add(session):
         print session
         conn = sqlite3.connect("sess")
         cur = conn.cursor()
         cur.execute("insert into sessions values(?,?,?,?,?)", 
                     (session.key, session.uphash, session.ip, session.data, session.creation_time))
         conn.commit()
-    def check_get(self, key=None, uphash=None):
+        del session
+    @staticmethod
+    def check_get(key=None, uphash=None):
         conn = sqlite3.connect("sess")
         cur = conn.cursor()
         if key:

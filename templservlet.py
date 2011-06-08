@@ -1,13 +1,12 @@
+from templates import base
+
 __templ__ = {
-             'simple':"""<html><head><title>%s</title></head><body>%s</body></html>""",
-             '__server_info__':'JCT File Server 0.02'
+             '__server_info__':'PyFileServer 0.02'
              }
 
-__settings__ = {
-                'uploaddir': {'windows':"%USERPROFILE%\\Downloads\\", 'posix':"$HOME/Downloads/"},
-                'hostname': 'localhost',
-                'servedir': False
-                }
-
-def render(type='simple'):
-    return __templ__[type]
+def render(type='htmldoc',title="Untitled", content=None):
+    if type == 'htmldoc':
+        templ = base.base(searchList=[{'title':title,'content':content,'hostname':__settings__['hostname']}])
+        mainMethod = getattr(templ, '_mainCheetahMethod_for_%s' % templ.__class__.__name__)
+        return getattr(templ, mainMethod)()
+    else: return __templ__[type]

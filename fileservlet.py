@@ -1,10 +1,11 @@
 import os, sqlite3, mimetypes
 from webob import Request, Response
 
-from templservlet import render, __settings__
+from templservlet import render
+from utilsservlet import settings
 from dbservlet import db
 
-def FileApp(environ, start_response, struct=__settings__['servedir']):
+def FileApp(environ, start_response, struct=settings['serve_dir']):
     req = Request(environ)
     if struct:
         filename = 'C:%s' % req.path.replace('/file','').replace('/',os.path.sep)
@@ -16,9 +17,13 @@ def FileApp(environ, start_response, struct=__settings__['servedir']):
             return res(environ, start_response)
     else:
         filekey = req.path.replace('/file/','').split('/')[0]
-        conn = sqlite3.connect('pfsdb')
+        conn = sqlite3.connect(settings['db_name'])
         filename = db.query_filekey(filekey, conn)
-        res = make_file_response(filename)
+        if filename:
+            res = make_file_response(filename)
+        else:
+            res = Response(status='404')
+            res.headers.add('Server', render('__server_info__'))
         return res(environ, start_response)
 
 def get_mimetype(filename):

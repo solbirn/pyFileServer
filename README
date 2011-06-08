@@ -4,7 +4,7 @@
 # All code in this repository is licensed under GNU-GPL
 #############################################################
 
-Dependencies: 
+Dependencies:
 
 cherrypy: http://www.cherrypy.org/wiki/CherryPyDownload
 webob: http://pypi.python.org/pypi/WebOb
