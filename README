@@ -5,6 +5,7 @@
 #############################################################
 
 Dependencies:
-
+-------------
 cherrypy: http://www.cherrypy.org/wiki/CherryPyDownload
 webob: http://pypi.python.org/pypi/WebOb
+[optional] pymysql: http://code.google.com/p/pymysql/
