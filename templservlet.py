@@ -1,4 +1,7 @@
+from settingsservlet import import_settings
 from templates import base
+
+__settings__ = import_settings()
 
 __templ__ = {
              '__server_info__':'PyFileServer 0.02'

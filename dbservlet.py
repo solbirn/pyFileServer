@@ -6,6 +6,26 @@ from utilsservlet import rand_alpha_numeric, settings
 conn = None
 db_type = settings['db_type']
 
+def dbconnect():
+    db_name=settings['db_name']
+    if db_type == 'sqlite':
+            try:
+                 return sqlite3.connect(db_name)
+            except sqlite3.OperationalError:
+                 from utilsservlet import create_db
+                 create_db(settings['db_name'])
+                 return sqlite3.connect(db_name)
+    elif db_type == 'mysql':
+         try:
+             return pymysql.connect(host=settings['db_host'], 
+                                    port=settings['db_port'], 
+                                    user=settings['db_username'], 
+                                    passwd=settings['db_password'], 
+                                    db=settings['db_name'])
+         except pymysql.err.InternalError, e:
+             print "MySQL internal error - ", e[0], ": ", e[1]
+             pass
+
 class db:
     @staticmethod
     def connect(db_name=settings['db_name']):
@@ -28,7 +48,7 @@ class db:
              pass
 
     @staticmethod
-    def query_filekey(key, con=db.connect()):
+    def query_filekey(key, con=dbconnect()):
         cursor = con.cursor()
         query = (key,)
         if db_type == 'sqlite':
@@ -43,7 +63,7 @@ class db:
             print e
         return file_path
     @staticmethod
-    def query_files_user(user, con=db.connect()):
+    def query_files_user(user, con=dbconnect()):
         cursor = con.cursor()
         query = (user,)
         if db_type == 'sqlite':
@@ -52,7 +72,7 @@ class db:
             cursor.execute('select * from files where user=%s', query)
         return cursor.fetchall()
     @staticmethod
-    def insert_file(filepath, user, con=db.connect()):
+    def insert_file(filepath, user, con=dbconnect()):
         key=rand_alpha_numeric(14)
         date=time.asctime(time.gmtime())
         con = db.connect()
@@ -71,7 +91,7 @@ class db:
         con.close()
         return key
     @staticmethod
-    def query_user(user, passwd, con=db.connect()):
+    def query_user(user, passwd, con=dbconnect()):
         cursor = con.cursor()
         query = (hashlib.md5(user+passwd).hexdigest(),)
         if db_type == 'sqlite':
@@ -96,7 +116,7 @@ class db:
         #    return None
         return key
     @staticmethod
-    def check_email_available(email, con=db.connect()):
+    def check_email_available(email, con=dbconnect()):
         cursor = con.cursor()
         query = (email,)
         if db_type == 'sqlite':
@@ -106,6 +126,4 @@ class db:
         #if cursor.fetchone(): return False #return false if *not* available
         #else: return True
         return True
-        
-conn = 
         
