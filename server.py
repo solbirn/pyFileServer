@@ -24,10 +24,10 @@ config = {'/':
         'tools.staticfile.on': True,
         'tools.staticfile.filename': "%s\\favicon.ico" % os.getcwd(),
     },
-        '/staticcache':
+        '/static':
     {
         'tools.staticdir.on': True,
-        'tools.staticdir.dir': "staticcache",
+        'tools.staticdir.dir': "static",
         'tools.gzip.mime_types': """['text/*','image/*']"""
     }, 
           '/certs':
