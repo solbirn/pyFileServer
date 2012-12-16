@@ -1,0 +1,15 @@
+/*.pem
+/certs/*.crt
+/certs/*.crl
+/sess
+/temp.txt
+/pfsdb
+/*.pyc
+/sessions
+/servlets/*.pyc
+*.pyc
+*.bat
+/setup.py
+/setup2.py
+/winservice.py
+/mainserv.py
