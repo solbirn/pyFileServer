@@ -215,30 +215,30 @@ class UploadApp(object):
         </script>
         
         <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-        <script src="/static/js/vendor/jquery.ui.widget.js"></script>
+        <script src="/staticcache/js/vendor/jquery.ui.widget.js"></script>
         <!-- The Templates plugin is included to render the upload/download listings -->
-        <script src="/static/js/tmpl.min.js"></script>
+        <script src="/staticcache/js/tmpl.min.js"></script>
         <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-        <script src="/static/js/load-image.min.js"></script>
+        <script src="/staticcache/js/load-image.min.js"></script>
         <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-        <script src="/static/js/canvas-to-blob.min.js"></script>
+        <script src="/staticcache/js/canvas-to-blob.min.js"></script>
         <!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-        <script src="/static/js/bootstrap.min.js"></script>
-        <script src="/static/js/bootstrap-image-gallery.min.js"></script>
+        <script src="/staticcache/js/bootstrap.min.js"></script>
+        <script src="/staticcache/js/bootstrap-image-gallery.min.js"></script>
         <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-        <script src="/static/js/jquery.iframe-transport.js"></script>
+        <script src="/staticcache/js/jquery.iframe-transport.js"></script>
         <!-- The basic File Upload plugin -->
-        <script src="/static/js/jquery.fileupload.js"></script>
+        <script src="/staticcache/js/jquery.fileupload.js"></script>
         <!-- The File Upload image processing plugin -->
-        <script src="/static/js/jquery.fileupload-ip.js"></script>
+        <script src="/staticcache/js/jquery.fileupload-ip.js"></script>
         <!-- The File Upload user interface plugin -->
-        <script src="/static/js/jquery.fileupload-ui.js"></script>
+        <script src="/staticcache/js/jquery.fileupload-ui.js"></script>
         <!-- The localization script -->
-        <script src="/static/js/locale.js"></script>
+        <script src="/staticcache/js/locale.js"></script>
         <!-- The main application script -->
-        <script src="/static/js/main.js"></script>
+        <script src="/staticcache/js/main.js"></script>
         <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
-        <!--[if gte IE 8]><script src="/static/js/cors/jquery.xdr-transport.js"></script><![endif]-->
+        <!--[if gte IE 8]><script src="/staticcache/js/cors/jquery.xdr-transport.js"></script><![endif]-->
         """, login=True)
     index.exposed = True
     
