@@ -214,21 +214,21 @@ ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
 ul.nav a { zoom: 1; }  /* the zoom property gives IE the hasLayout trigger it needs to correct extra whiltespace between the links */
 </style>
 <![endif]-->
-<script src="/cache/js/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
 <!-- Bootstrap CSS Toolkit styles -->
-<link rel="stylesheet" href="/cache/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 <!-- Generic page styles 
-<link rel="stylesheet" href="/cache/css/style.css">-->
+<link rel="stylesheet" href="/static/css/style.css">-->
 <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-<link rel="stylesheet" href="/cache/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
 <!-- Bootstrap CSS fixes for IE6 -->
-<!--[if lt IE 7]><link rel="stylesheet" href="/cache/css/bootstrap-ie6.min.css"><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" href="/static/css/bootstrap-ie6.min.css"><![endif]-->
 <!-- Bootstrap Image Gallery styles -->
-<link rel="stylesheet" href="/cache/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-image-gallery.min.css">
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-<link rel="stylesheet" href="/cache/css/jquery.fileupload-ui.css">
+<link rel="stylesheet" href="/static/css/jquery.fileupload-ui.css">
 <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-<!--[if lt IE 9]><script src="/cache/js/html5.js"></script><![endif]-->
+<!--[if lt IE 9]><script src="/static/js/html5.js"></script><![endif]-->
         <script type="text/javascript">
          function delete_key(key){
              $.ajax({
